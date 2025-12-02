@@ -15,7 +15,7 @@ POSTS = [
     },
     {
         "id": 2,
-        "title": "Alice in hains e sua tristeza cativante",
+        "title": "Alice in Chains e sua tristeza cativante",
         "author": "Gilberto Gil",
         "date": "2025-10-15",
         "summary": "Princípios básicos de tipografia, espaçamento e hierarquia visual para posts técnicos.",
@@ -35,11 +35,33 @@ def render_post_card(post):
 
 # --- Layout ---
 
+if "theme" not in st.session_state:
+    st.session_state.theme = "dark"
+
+
+selected_theme = st.toggle("Tema claro", value=(st.session_state.theme == "light"))
+st.session_state.theme = "light" if selected_theme else "dark"
+
+
+# Apply CSS for light/dark theme
+if st.session_state.theme == "light":
+    st.markdown(
+    """
+    <style>
+    body, .stApp { background-color: #FFFFFF !important; color: #000000 !important; }
+    .stButton>button { background-color:#f0f0f0!important; color:#000!important; }
+    .stTextInput>div>div>input, textarea { background-color:#f9f9f9!important; color:#000!important; }
+    </style>
+    """,
+    unsafe_allow_html=True,
+    )
+    
+
 # Top bar / hero
 col1, col2 = st.columns([3, 1])
 with col1:
     st.title("Meu Blog — Arthur Fernandes")
-    st.markdown("Meu nome é Arthur Fernandes e eu sou auxiliar de sala do curso technovation")
+    st.markdown("## Meu nome é Arthur Fernandes e eu sou auxiliar de sala do curso technovation")
 with col2:
     st.image("https://ih1.redbubble.net/image.3149141987.1714/flat,750x1000,075,t.jpg")
 
@@ -76,22 +98,23 @@ with main:
     elif page == "Sobre":
         st.header("Sobre este blog")
         st.markdown(
-            "Este é um *placeholder* para uma página de blog. A ideia é demonstrar componentes comuns: lista de posts, barra lateral, formulário de contato e um pouco de estilo visual."
+            "Feito para mostrar os gostos do autor quanto a musica e ser usado como template para aula de streamlit"
         )
         st.subheader("Missão")
         st.write("Compartilhar conteúdo técnico de forma clara e acessível.")
 
     elif page == "Contato":
-        st.header("Fale comigo")
-        st.write("Formulário fictício — substitua por integração real conforme necessário.")
-        name = st.text_input("Seu nome")
-        email = st.text_input("Seu e-mail")
-        message = st.text_area("Mensagem")
-        if st.button("Enviar"):
-            if not name or not email or not message:
-                st.warning("Preencha todos os campos antes de enviar.")
-            else:
-                st.success("Obrigado! Sua mensagem foi enviada (simulada).")
+        with st.form("fale_conosco"):
+            st.header("Fale comigo")
+            st.write("Formulário fictício — substitua por integração real conforme necessário.")
+            name = st.text_input("Seu nome")
+            email = st.text_input("Seu e-mail")
+            message = st.text_area("Mensagem")
+            if st.form_submit_button("Enviar"):
+                if not name or not email or not message:
+                    st.warning("Preencha todos os campos antes de enviar.")
+                else:
+                    st.success("Obrigado! Sua mensagem foi enviada (simulada).")
 
 # Footer
 st.markdown("---")
@@ -100,6 +123,3 @@ with colf1:
     st.write(f"© {datetime.now().year} Meu Blog")
 with colf2:
     st.write("Template de exemplo para aulas — personalize cores, fontes e layout conforme a necessidade.")
-
-# Pequenas instruções
-st.info("Para rodar localmente: `pip install streamlit` e `streamlit run streamlit_blog_placeholder.py`")
